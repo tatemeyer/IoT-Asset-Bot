@@ -1,0 +1,13 @@
+{
+  "dashboard_url": "http://localhost:5000",
+  "telemetry_table": "table#asset-table",
+  "table_row": "tr.asset-row",
+  "columns": {
+    "asset_id": "td.asset-id",
+    "timestamp": "td.timestamp",
+    "mileage": "td.mileage",
+    "battery_health": "td.battery-health",
+    "usage_hours": "td.usage-hours",
+    "error_code": "td.error-code"
+  }
+}

@@ -30,17 +30,18 @@
         </thead>
         <tbody>
             {% for asset in assets %}
-            <tr>
-                <td>{{ asset.asset_id }}</td>
-                <td>{{ asset.name }}</td>
-                <td class="{{ asset.error_code }}">{{ asset.error_code }}</td>
-                <td>{{ asset.battery_health }}</td>
-                <td>{{ asset.mileage }}</td>
-                <td>{{ asset.usage_hours }}</td>
-                <td>{{ asset.timestamp }}</td>
+            <tr class="asset-row">
+                <td class="asset-id">{{ asset.asset_id }}</td>
+                <td class="name">{{ asset.name }}</td>
+                <td class="error-code {{ asset.error_code }}">{{ asset.error_code }}</td>
+                <td class="battery-health">{{ asset.battery_health }}</td>
+                <td class="mileage">{{ asset.mileage }}</td>
+                <td class="usage-hours">{{ asset.usage_hours }}</td>
+                <td class="timestamp">{{ asset.timestamp }}</td>
             </tr>
             {% endfor %}
-        </tbody>
+</tbody>
+
     </table>
     <div id="last-updated">Last Updated: {{ last_updated }}</div>
 </body>
