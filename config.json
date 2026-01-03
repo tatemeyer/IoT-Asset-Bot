@@ -1,0 +1,8 @@
+{
+  "ledger_path": "control_center/data/mock_asset_ledger.xlsx",
+  "annotated_output": "control_center/data/annotated_asset_ledger.xlsx",
+  "log_file": "control_center/logs/automation.log",
+  "retry_attempts": 3,
+  "retry_delay_seconds": 5,
+  "critical_error_codes": ["FAIL"]
+}
