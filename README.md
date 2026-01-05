@@ -2,197 +2,236 @@
 
 ## Overview
 
-The **Intelligent IoT Asset Reconciliation System** is a cross-platform automation project that simulates how financial institutions reconcile telemetry data from remote assets into centralized financial systems.
+The Intelligent IoT Asset Reconciliation System is a fully automated, cross-platform pipeline that simulates how enterprises reconcile telemetry data from remote assets into centralized financial records using RPA-style UI automation and explainable intelligence.
 
-This project demonstrates how **RPA-style automation principles** (UI interaction, fragile workflows, exception handling) can be implemented **purely using Python and C++**, without relying on commercial RPA tools. The goal is to bridge **embedded systems**, **enterprise automation**, and **financial reconciliation logic** in a realistic, production-inspired architecture.
+The system intentionally avoids backend APIs and commercial RPA tools, instead implementing true UI-driven automation using Python and C++, mirroring real-world enterprise constraints where legacy systems, dashboards, and human-oriented interfaces dominate.
 
----
-
-## Problem Statement
-
-In many enterprise environments—especially in finance—critical asset data originates from **remote or embedded devices** but must be manually reconciled into **legacy systems** such as Excel-based ledgers or ERP tools. These workflows are:
-
-- Repetitive  
-- Error-prone  
-- UI-driven (no APIs available)  
-- Fragile to system or network failures  
-
-This project automates that reconciliation process end-to-end while preserving the real-world constraints that make RPA necessary.
+This project is considered feature-complete and stable as an MVP.
 
 ---
 
-## Solution Architecture
+## High-Level Architecture
 
-Raspberry Pi (Linux, C++)
+Edge Device (Raspberry Pi)
+- Flask Dashboard (app.py)
+- Human-readable Telemetry UI
 
-└─ Telemetry Generator (C++)
+(UI-only access)
 
-└─ Local CSV / HTTP Exposure
+Control Center (Windows / Python)
+- Selenium UI Automation (RPA)
+- Reconciliation Engine
+- Intelligence Layer (Anomaly Detection)
+- Excel-based Financial Ledgers
+- Centralized Logging
 
-
-Windows Control Center (Python)
-
-├─ UI / Browser Automation (Selenium / PyAutoGUI)
-
-├─ Reconciliation Engine
-
-├─ Excel Ledger Interaction
-
-├─ Anomaly Detection (Explainable Logic)
-
-└─ Logging & Exception Handling
+Output
+- Annotated Financial Output
 
 ---
 
-### Key Design Choices
-- **C++ at the Edge:** Simulates embedded, long-running telemetry generation
-- **Python Control Center:** Orchestrates automation, reconciliation, and intelligence
-- **UI-Level Automation:** Mimics human interaction where APIs are unavailable
-- **Explainable Intelligence:** Rule-based anomaly detection aligned with financial governance
+## Core Design Principles
 
----
-
-## Features
-
-- Simulated IoT telemetry generation on a Raspberry Pi
-- Cross-platform automation between Linux and Windows
-- UI-driven data extraction (browser / desktop automation)
-- Automated reconciliation into an Excel-based financial ledger
-- Anomaly and exception detection using deterministic rules
-- Robust error handling (offline device, missing data, file locks)
-- Audit-friendly logging
+- Real RPA Behavior: Data is extracted exclusively through a UI designed for humans
+- No API Shortcuts: Automation interacts with dashboards, not backend files
+- Explainable Intelligence: Deterministic, auditable anomaly detection
+- Enterprise Governance: Logging, retries, validation, and separation of concerns
+- Cross-Platform Interoperability: Linux edge device and Windows control center
 
 ---
 
 ## Repository Structure
 
-Intelligent-IoT-Asset-Reconciliation/
-
-│ 
-
-├── docs/ 
-
-│ ├── PDD.md 
-
-│ └── architecture.png 
-
-│ 
-
-├── edge-device-pi/
-
-│ ├── telemetry_generator.cpp
-
-│ ├── Makefile
-
-│ └── telemetry.csv
-
+.
+├── control_center/
+│   ├── intelligence/
+│   │   └── anomaly_detection.py
+│   ├── reconciliation/
+│   │   └── reconcile.py
+│   ├── ui_automation/
+│   │   ├── selenium_bot.py
+│   │   └── selectors.json
+│   └── data/
+│       ├── asset_ledger.xlsx
+│       └── annotated_ledger.xlsx
 │
-
-├── control-center/
-
-│ ├── ui_automation/
-
-│ │ ├── selenium_bot.py
-
-│ │ └── desktop_bot.py
-
-│ │
-
-│ ├── reconciliation/
-
-│ │ ├── reconcile.py
-
-│ │ └── rules.py
-
-│ │
-
-│ ├── intelligence/
-
-│ │ └── anomaly_detection.py
-
-│ │
-
-│ ├── data/
-
-│ │ └── mock_asset_ledger.xlsx
-
-│ │
-
-│ └── main.py
-
+├── edge_device/
+│   └── app.py
 │
-
 ├── logs/
-
-│ └── automation.log
-
+│   └── automation.log
 │
-
+├── config.json
+├── main.py
 └── README.md
 
+---
+
+## Edge Device (Raspberry Pi)
+
+Flask Dashboard (app.py)
+
+- Hosts a human-readable telemetry dashboard
+- Displays latest asset metrics in tabular form
+- Serves as the only data source for the automation
+- Designed explicitly to be scraped via UI automation
+- No APIs are exposed for direct data access
 
 ---
 
-## How It Works
+## Control Center Components
 
-### 1. Edge Telemetry Generation (C++)
-A C++ program running on a Raspberry Pi simulates asset telemetry such as mileage, usage, and health indicators. Data is periodically written to a CSV file, representing a constrained embedded system with limited integration options.
+UI Automation (RPA Core)
 
-### 2. UI-Based Data Extraction (Python)
-On Windows, Python-based automation retrieves telemetry data using:
-- Browser automation (Selenium), or
-- Desktop UI automation (PyAutoGUI / PyWinAuto)
+Module: selenium_bot.py
 
-This mirrors RPA-style automation where backend APIs are unavailable.
-
-### 3. Financial Reconciliation
-Extracted telemetry is reconciled against a mock Excel ledger representing a financial system of record. Discrepancies are flagged automatically.
-
-### 4. Intelligent Anomaly Detection
-A lightweight intelligence layer evaluates telemetry using explainable, rule-based logic appropriate for financial environments where transparency is required.
-
-### 5. Exception Handling & Logging
-The system gracefully handles failures such as:
-- Offline edge devices
-- Missing or corrupted files
-- Locked financial ledgers  
-
-All exceptions are logged for auditability.
+- Uses Selenium to launch a real browser session
+- Navigates to the Raspberry Pi dashboard
+- Extracts telemetry using DOM selectors
+- Handles multiple failure modes:
+  - Page load timeouts
+  - Missing UI elements
+  - Stale UI state
+- Selector definitions are externalized in selectors.json to reduce fragility
+- Mimics real human interaction patterns
 
 ---
 
-## Why No Commercial RPA Tool?
+Reconciliation Engine
 
-This project intentionally avoids tools like UiPath or Power Automate to demonstrate a **deep understanding of automation fundamentals** rather than vendor-specific implementations.
+Module: reconcile.py
 
-The same logic could be migrated to a commercial RPA platform with minimal changes.
+Responsibilities:
+- Validates incoming telemetry
+- Evaluates new data against historical ledger entries
+- Enforces predefined business rules
+- Prevents duplicate or out-of-order records
+- Persists reconciled data to Excel
 
-> The focus is on **automation design, resilience, and governance**, not tool dependency.
+Example rule types:
+- Mileage must be monotonic
+- Asset IDs must match known records
+- Timestamps must be newer than previous entries
 
----
-
-## Key Skills Demonstrated
-
-- Embedded systems (C++, Linux)
-- Cross-platform automation
-- RPA principles without vendor lock-in
-- Financial reconciliation logic
-- Explainable intelligent automation
-- Exception handling and reliability engineering
-- Enterprise-ready project structure and documentation
+All financial data is stored in Excel spreadsheets under control_center/data.
 
 ---
 
-## Future Enhancements
+Intelligence Layer (Anomaly Detection)
 
-- Add authentication and role-based access
-- Replace CSV with message queues (MQTT / Kafka)
-- Integrate a lightweight REST API
-- Add dashboard-based reporting
-- Package control center as a Windows service
+Module: anomaly_detection.py
+
+The intelligence layer applies explainable, rule-based logic appropriate for financial and audit-sensitive environments.
+
+Example logic:
+
+def detect_anomalies(row):
+    flags = []
+    status = "CLEARED"
+
+    if battery_health is missing:
+        flag data error and escalate
+
+    if battery health below threshold:
+        flag low battery
+
+    if usage exceeds threshold:
+        flag high usage
+
+    if error code equals FAIL:
+        escalate immediately
+
+    return final status and flags
+
+Outputs:
+- Annotated Excel ledger
+- Status classifications: CLEARED, WARNING, ESCALATED
+- Full audit trail via centralized logging
+
+---
+
+## Orchestration Pipeline
+
+Entry Point: main.py
+
+The entire system is orchestrated from a single control file.
+
+Responsibilities:
+- Configuration loading
+- Centralized logging initialization
+- Retry logic for UI automation
+- Sequential execution of pipeline stages
+- Graceful handling of critical failures
+
+Pipeline Flow:
+1. UI Extraction with retry logic
+2. Telemetry validation and reconciliation
+3. Intelligence layer annotation
+4. Completion logging
+
+All execution logs are written to:
+logs/automation.log
+
+---
+
+## Logging and Auditability
+
+- Single centralized log file
+- Timestamped entries
+- INFO, ERROR, and CRITICAL log levels
+- UI failures, reconciliation decisions, and anomaly flags are logged
+
+This enables:
+- Post-run auditing
+- Failure diagnosis
+- Governance and compliance review
+
+---
+
+## Configuration
+
+All runtime parameters are externalized in config.json, including:
+- Retry attempts
+- Retry delays
+- Ledger paths
+- Log file location
+- Output file destinations
+
+No environment-specific values are hardcoded.
+
+---
+
+## Why This Is Real RPA Without RPA Tools
+
+- UI-only data access
+- Fragile selector handling
+- Human-oriented dashboards
+- Retry and exception logic
+- No backend integration shortcuts
+
+This mirrors enterprise RPA use cases where APIs are unavailable, legacy systems dominate, and reliability matters more than raw speed.
+
+---
+
+## Current Status
+
+- Feature complete
+- Stable MVP
+- End-to-end automation
+- Enterprise-style architecture
+
+---
+
+## Potential Enhancements
+
+- Multi-asset support
+- Role-based access controls
+- Message queue ingestion
+- Reporting dashboards
+- Containerized deployment
 
 ---
 
 ## License
 
-This project is provided for educational and demonstration purposes.
+This project is intended for educational, demonstration, and portfolio use.
