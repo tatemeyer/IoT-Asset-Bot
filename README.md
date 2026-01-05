@@ -42,6 +42,9 @@ Output
 
 ## Repository Structure
 
+## Repository Structure
+
+```text
 .
 ├── control_center/
 │   ├── intelligence/
@@ -64,6 +67,7 @@ Output
 ├── config.json
 ├── main.py
 └── README.md
+```
 
 ---
 
